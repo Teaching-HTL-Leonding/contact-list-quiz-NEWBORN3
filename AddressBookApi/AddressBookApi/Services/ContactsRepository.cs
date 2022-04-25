@@ -19,9 +19,9 @@ namespace AddressBookApi.Services
             return Persons;
         }
 
-        public Person GetContactById(int id)
+        public Person GetContactByName(string name)
         {
-            return Persons.FirstOrDefault(p => p.Id == id);
+            return Persons.FirstOrDefault(p => p.lastName == name);
         }
 
         public void Delete(int id)

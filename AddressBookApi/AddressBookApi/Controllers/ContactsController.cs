@@ -1,3 +1,4 @@
+using System;
 using System.Net.Mail;
 using System.Net;
 using System.Collections;
@@ -25,13 +26,13 @@ namespace AddressBookApi.Controllers
             return Ok(repo.GetAllContacts());
         }
 
-        [HttpGet("{personId}", Name = nameof(GetById))]
+        [HttpGet("findByName", Name = nameof(GetByName))]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Person))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
 
-        public IActionResult GetById(int personId)
+        public IActionResult GetByName([FromQuery] string nameFilter)
         {
-            var person = repo.GetContactById(personId);
+            var person = repo.GetContactByName(nameFilter);
             return person != null ? Ok(person) : BadRequest("Invalid or missing name");
         }
 
@@ -45,7 +46,7 @@ namespace AddressBookApi.Controllers
                 return BadRequest("Invalid Input, rquired field missing");
             }
             repo.Add(person);
-            return CreatedAtAction(nameof(GetById), new { personId = person.Id }, person);
+            return CreatedAtAction(nameof(GetByName), new { personId = person.Id }, person);
         }
 
         [HttpDelete("{personId}")]
@@ -55,10 +56,15 @@ namespace AddressBookApi.Controllers
         public IActionResult Delete(int personId)
         {
             if (personId < 1) return BadRequest("Invalid ID supplied");
-            var personToDelete = repo.GetContactById(personId);
-            if (personToDelete == null) return NotFound();
-            repo.Delete(personId);
-            return NoContent();
+            try
+            {
+                repo.Delete(personId);
+                return NoContent();
+            }
+            catch (ArgumentException)
+            {
+                return NotFound("Person Not found");
+            }
         }
     }
 }

@@ -5,7 +5,7 @@ namespace AddressBookApi.Services
     {
         Person Add(Person person);
         IEnumerable<Person> GetAllContacts();
-        Person GetContactById(int id);
+        Person GetContactByName(string name);
         void Delete(int id);
     }
 }

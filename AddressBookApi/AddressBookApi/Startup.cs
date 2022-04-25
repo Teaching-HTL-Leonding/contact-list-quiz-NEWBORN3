@@ -1,3 +1,4 @@
+using AddressBookApi.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -28,6 +29,7 @@ namespace AddressBookApi
         {
 
             services.AddControllers();
+            services.AddSingleton<IContactsRepository, ContactsRepository>();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "AddressBookApi", Version = "v1" });
